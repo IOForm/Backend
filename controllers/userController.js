@@ -31,14 +31,13 @@ class Controller {
         })
             .then(user => {
                 foundUser = user.dataValues
-                if (foundUser) {
+                if (user) {
                     return verifyPassword(password, foundUser.password)
                 } else {
                     res.status(404).json({ message: `fail login` })
                 }
             })
             .then(hashResult => {
-                console.log('asdahdiuashudihaiudhaiuhdusaidhuaihs', hashResult);
                 if (hashResult) {
                     const access_token = createToken({
                         id: foundUser.id,

@@ -4,7 +4,7 @@
   "description": "IOForm Backend",
   "main": "index.js",
   "scripts": {
-    "test": "jest --detectOpenHandles --forceExit --runInBand",
+    "test": "jest --forceExit --runInBand",
     "dev": "cross-env NODE_ENV=development nodemon app.js",
     "start": "node app.js"
   },

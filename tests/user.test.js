@@ -1,22 +1,26 @@
 const request = require("supertest");
 const app = require("../app.js");
 const { hashPassword } = require('../helper/bcrypt');
-const { User } = require('../models');
+const { User, sequelize } = require('../models');
+const { queryInterface } = sequelize;
 
 // BEFORE TEST ======
-beforeAll((done) => {
-    // Create customer
-    User.create({
-        name: 'Ben',
-        email: 'ben@mail.com',
-        password: hashPassword('1234'),
-        role: 'Marketing'
-    })
-        .then(user => {
+beforeAll(done => {
+    queryInterface.bulkInsert('Users', [
+        {
+            name: 'Ben',
+            email: 'ben@mail.com',
+            password: hashPassword('1234'),
+            role: 'Marketing',
+            createdAt: new Date(),
+            updatedAt: new Date()
+        }
+    ])
+        .then(() => {
             done()
         })
         .catch(err => {
-            done()
+            done(err)
         })
 })
 
@@ -34,7 +38,6 @@ describe('Login success admin POST /login', () => {
             .set('Accept', 'application/json')
             .expect(200)
             .then(response => {
-                console.log(response.status);
                 let { body, status } = response;
                 expect(status).toBe(200);
                 expect(body).toHaveProperty('id', expect.any(Number))
