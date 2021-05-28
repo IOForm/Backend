@@ -6,7 +6,7 @@ class Controller {
     static register(req, res, next) {
         const newUser = {
             name: req.body.name,
-            username: req.body.username,
+            email: req.body.email,
             password: req.body.password,
             role: req.body.role
         }
@@ -24,28 +24,29 @@ class Controller {
     }
     // LOGIN
     static login(req, res, next) {
-        const { username, password } = req.body
+        const { email, password } = req.body
         let foundUser
         User.findOne({
-            where: { username: username }
+            where: { email: email }
         })
             .then(user => {
-                foundUser = user
-                if (user) {
-                    return verifyPassword(password, user.password)
+                foundUser = user.dataValues
+                if (foundUser) {
+                    return verifyPassword(password, foundUser.password)
                 } else {
                     res.status(404).json({ message: `fail login` })
                 }
             })
             .then(hashResult => {
+                console.log('asdahdiuashudihaiudhaiuhdusaidhuaihs', hashResult);
                 if (hashResult) {
                     const access_token = createToken({
                         id: foundUser.id,
-                        username: foundUser.username
+                        email: foundUser.email
                     });
                     res.status(200).json({
                         id: foundUser.id,
-                        username: foundUser.username,
+                        email: foundUser.email,
                         access_token
                     })
                 } else {

@@ -23,11 +23,11 @@ module.exports = (sequelize, DataTypes) => {
         }
       }
     },
-    username: {
+    email: {
       type: DataTypes.STRING,
       validate: {
         notEmpty: {
-          msg: `username can not empty`
+          msg: `email can not empty`
         }
       }
     },
