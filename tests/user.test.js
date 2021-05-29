@@ -71,7 +71,7 @@ let blankInput = {
 // END Input ----
 
 // FAIL LOGIN
-describe('Fail LOGIN POST /login', () => {
+describe('Fail login POST /login', () => {
     // WRONG PASSWORD
     it('response with status', function (done) {
         request(app)
@@ -123,16 +123,69 @@ describe('Fail LOGIN POST /login', () => {
 })
 
 
+// REGISTER USER ======
+describe('Register User POST /register', () => {
+    // SUCCESS REGISTER
+    let newUser = {
+        name: 'Dimas',
+        email: 'dimas@mail.com',
+        password: hashPassword('asd'),
+        role: 'Finance',
+    }
+
+    it('response with status 201 and property name, email, role', function (done) {
+        request(app)
+            .post('/register')
+            .send(newUser)
+            .set('Accept', 'application/json')
+            .expect(201)
+            .then(response => {
+                let { body, status } = response
+                expect(status).toBe(201)
+                expect(body).toHaveProperty('id', newUser.name)
+                expect(body).toHaveProperty('name', newUser.email)
+                expect(body).toHaveProperty('role', newUser.role)
+                done()
+            })
+            .catch(err => {
+                done()
+            })
+    })
+
+    // FAIL REGISTER
+    let failRegister = {
+        name: 'Lala',
+        email: '',
+        password: hashPassword('asd'),
+        role: '',
+    }
+
+    it('response with status 400 and property name, email, role', function (done) {
+        request(app)
+            .post('/register')
+            .send(failRegister)
+            .set('Accept', 'application/json')
+            .expect(400)
+            .then(response => {
+                let { status } = response
+                expect(status).toBe(400)
+                done()
+            })
+            .catch(err => {
+                done()
+            })
+    })
+})
+
+
 // AFTER TEST CASE ======
 afterAll((done) => {
-    User.destroy({
-        where: { email: 'ben@mail.com' }
-    })
-        .then(user => {
+    queryInterface.bulkDelete('Users', [], null)
+        .then(() => {
             done()
         })
         .catch(err => {
-            done()
+            done(err)
         })
 })
 // END AFTER TEST CASE ======
