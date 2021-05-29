@@ -4,13 +4,21 @@ const { createToken } = require('../helper/jwt');
 
 class Controller {
     static register(req, res, next) {
+        const email = req.body.email
         const newUser = {
             name: req.body.name,
             email: req.body.email,
             password: req.body.password,
             role: req.body.role
         }
-        User.create(newUser)
+        User.findOne({ where: { email: email } })
+            .then(user => {
+                if (user) {
+                    res.status(400).json({ message: `email have been registered` })
+                } else {
+                    return User.create(newUser)
+                }
+            })
             .then(user => {
                 res.status(201).json({
                     id: user.id,
@@ -19,7 +27,7 @@ class Controller {
                 })
             })
             .catch(err => {
-                res.status(400).json({ message: `fail create` })
+                res.status(400).json({ message: `fail register` })
             })
     }
     // LOGIN
