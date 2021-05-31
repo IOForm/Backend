@@ -19,7 +19,8 @@ class FormController {
         approvalList.forEach(item => generateApproval.push(Approval.create({
             UserId: item,
             FormId: newForm.id,
-            approvalStatus: false
+            approvalStatus: false,
+            rejected: false
         })))
         await Promise.all(generateApproval)
         res.status(201).json({ message: 'Form and Approval Created' })

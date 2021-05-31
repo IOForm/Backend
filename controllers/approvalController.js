@@ -6,7 +6,10 @@ class Controller {
         Approval.findAll({
             where: {
                 UserId: req.isLogedIn.id,
-                approvalStatus: true
+                [Op.or]: [
+                    { approvalStatus: true },
+                    { rejected: true }
+                ]
             },
             include: Form
         })
@@ -68,7 +71,7 @@ class Controller {
                     verifiedApprove.push(approvalToSend)
                 }
             })
-            res.status(200).json(verifiedApprove)
+            res.status(200).json(verifiedApprove.filter(item => !item.rejected))
         } catch (error) {
             res.status(500).json(error)
         }
@@ -144,6 +147,29 @@ class Controller {
             .catch(err => {
                 res.status(404).json({ message: `fail delete approval` })
             })
+    }
+
+    static async rejectApproval(req, res) {
+        try {
+            const updateApprovalData = await Approval.update({
+                rejected: true
+            }, {
+                where: {
+                    id: req.params.id
+                },
+                returning: true
+            })
+            const updateFormData = await Form.update({
+                formComplete: true
+            },{
+                where: {
+                    id: updateApprovalData[1][0].FormId
+                }
+            })
+            res.status(200).json({ message: `form rejected` })
+        } catch (error) {
+            res.status(404).json({ message: `fail to reject approval` })
+        }
     }
 }
 
