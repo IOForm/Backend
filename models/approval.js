@@ -24,7 +24,8 @@ module.exports = (sequelize, DataTypes) => {
     },
     UserId: DataTypes.INTEGER,
     FormId: DataTypes.INTEGER,
-    approvalStatus:DataTypes.BOOLEAN
+    approvalStatus:DataTypes.BOOLEAN,
+    rejected:DataTypes.BOOLEAN
   }, {
     sequelize,
     modelName: 'Approval',
