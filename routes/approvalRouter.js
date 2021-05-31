@@ -1,11 +1,10 @@
 const approvalRouter = require('express').Router();
 const Controller = require('../controllers/approvalController');
 
-approvalRouter.get('/', Controller.getUserApproval);
-approvalRouter.get('/', Controller.getApproveHistory);
-approvalRouter.post('/', Controller.create);
+approvalRouter.get('/history', Controller.getApproveHistory);
+approvalRouter.get('/client', Controller.getUserApproval);
+approvalRouter.get('/:id', Controller.formApprovalDetail);
 approvalRouter.patch('/:id', Controller.editStatus);
 approvalRouter.delete('/:id', Controller.delete);
-
 
 module.exports = approvalRouter

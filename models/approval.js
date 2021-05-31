@@ -12,29 +12,19 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       Approval.belongsTo(models.User)
-      // Approval.belongsTo(models.Form)
+      Approval.belongsTo(models.Form)
     }
   };
   Approval.init({
-    UserId: {
-      type: DataTypes.INTEGER,
-      references: {
-        model: 'Users',
-        key: 'id'
-      },
-      onUpdate: 'CASCADE',
-      onDelete: 'CASCADE'
+    id: {
+      allowNull: false,
+      autoIncrement: true,
+      primaryKey: true,
+      type: DataTypes.INTEGER
     },
-    FormId: {
-      type: DataTypes.INTEGER,
-      references: {
-        model: 'Forms',
-        key: 'id'
-      },
-      onUpdate: 'CASCADE',
-      onDelete: 'CASCADE'
-    },
-    approvalStatus: DataTypes.STRING
+    UserId: DataTypes.INTEGER,
+    FormId: DataTypes.INTEGER,
+    approvalStatus:DataTypes.BOOLEAN
   }, {
     sequelize,
     modelName: 'Approval',

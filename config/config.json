@@ -1,8 +1,8 @@
 {
   "development": {
     "username": "postgres",
-    "password": "asdasd123",
-    "database": "IOFrom",
+    "password": "postgres",
+    "database": "ioformtestingBE",
     "host": "127.0.0.1",
     "dialect": "postgres"
   },

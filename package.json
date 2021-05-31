@@ -4,7 +4,7 @@
   "description": "IOForm Backend",
   "main": "index.js",
   "scripts": {
-    "test": "jest --forceExit --runInBand",
+    "test": "jest --forceExit --runInBand --collectCoverage",
     "dev": "cross-env NODE_ENV=development nodemon app.js",
     "start": "node app.js"
   },
