@@ -1,8 +1,13 @@
 const { Role } = require('../models');
+const { Op } = require('sequelize');
 
 class Controller {
     static show(req, res) {
-        Role.findAll()
+        Role.findAll({
+            where: { position: {
+                [Op.gt] : 0
+            } }
+        })
             .then(roles => {
                 res.status(200).json(roles)
             })

@@ -11,27 +11,12 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      // Role.belongsTo(models.User, { foreignKey: 'role' })
       Role.hasMany(models.User)
     }
   };
   Role.init({
-    role: {
-      type: DataTypes.STRING,
-      validate: {
-        notEmpty: {
-          msg: `role can not empty`
-        }
-      }
-    },
-    position: {
-      type: DataTypes.INTEGER,
-      validate: {
-        notEmpty: {
-          msg: `position can not empty`
-        }
-      }
-    }
+    name: DataTypes.STRING,
+    position: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Role',

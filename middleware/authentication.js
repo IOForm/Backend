@@ -14,7 +14,7 @@ function authentication(req, res, next) {
                     req.isLogedIn = {
                         id: user.id,
                         email: user.email,
-                        role: user.role
+                        role: user.RoleId
                     }
                     next()
                 } else {
