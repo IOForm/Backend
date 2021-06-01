@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "set NODE_ENV=test&&jest --forceExit --runInBand --collectCoverage",
-    "dev": "cross-env NODE_ENV=development nodemon app.js",
-    "start": "node app.js"
+    "dev": "set NODE_ENV=development nodemon app.js",
+    "start": "node bin/http.js"
   },
   "repository": {
     "type": "git",
