@@ -6,18 +6,23 @@ const { queryInterface } = sequelize;
 
 // BEFORE TEST ======
 beforeAll(done => {
-    queryInterface.bulkInsert('Users', [
-        {
-            name: 'Ben',
-            email: 'ben@mail.com',
-            password: hashPassword('1234'),
-            role: 'Marketing',
-            createdAt: new Date(),
-            updatedAt: new Date()
-        }
-    ])
-        .then(() => {
-            done()
+    User.findOne({ where: { name: 'Ben' } })
+        .then((result) => {
+            if (result) {
+                done()
+            } else {
+                return queryInterface.bulkInsert('Users', [
+                    {
+                        name: 'Ben',
+                        email: 'ben@mail.com',
+                        password: hashPassword('1234'),
+                        RoleId: 2,
+                        createdAt: new Date(),
+                        updatedAt: new Date()
+                    }
+                ])
+                    .then(() => done())
+            }
         })
         .catch(err => {
             done(err)
@@ -130,10 +135,10 @@ describe('Register User POST /register', () => {
         name: 'Dimas',
         email: 'dimas@mail.com',
         password: hashPassword('asd'),
-        role: 'Finance',
+        RoleId: 4,
     }
 
-    it('response with status 201 and property name, email, role', function (done) {
+    it('response with status 201 and property name, email, RoleId', function (done) {
         request(app)
             .post('/register')
             .send(newUser)
@@ -143,8 +148,8 @@ describe('Register User POST /register', () => {
                 let { body, status } = response
                 expect(status).toBe(201)
                 expect(body).toHaveProperty('id', newUser.name)
-                expect(body).toHaveProperty('name', newUser.email)
-                expect(body).toHaveProperty('role', newUser.role)
+                expect(body).toHaveProperty('email', newUser.email)
+                expect(body).toHaveProperty('RoleId', newUser.RoleId)
                 done()
             })
             .catch(err => {
@@ -157,10 +162,10 @@ describe('Register User POST /register', () => {
         name: 'Lala',
         email: '',
         password: hashPassword('asd'),
-        role: '',
+        RoleId: '',
     }
 
-    it('response with status 400 and property name, email, role', function (done) {
+    it('response with status 400 and property name, email, RoleId', function (done) {
         request(app)
             .post('/register')
             .send(failRegister)
@@ -180,10 +185,9 @@ describe('Register User POST /register', () => {
 
 // AFTER TEST CASE ======
 afterAll((done) => {
-    queryInterface.bulkDelete('Users', [], null)
-        .then(() => {
-            done()
-        })
+    done()
+    User.destroy({ where: { name: "Dimas" } })
+        .then(() => done())
         .catch(err => {
             done(err)
         })

@@ -34,7 +34,7 @@ module.exports = (sequelize, DataTypes) => {
       onUpdate: 'CASCADE',
       onDelete: 'CASCADE'
     },
-    approvalStatus: DataTypes.STRING
+    approvalStatus: DataTypes.BOOLEAN
   }, {
     sequelize,
     modelName: 'Approval',

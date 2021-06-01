@@ -3,6 +3,17 @@ const { verifyPassword } = require('../helper/bcrypt');
 const { createToken } = require('../helper/jwt');
 
 class Controller {
+    static show(req, res) {
+        User.findAll()
+            .then(users => {
+                res.status(200).json(users)
+            })
+            .catch(err => {
+                res.status(400).json({ message: `fail get users` })
+            })
+
+    }
+    // REGISTER
     static register(req, res, next) {
         const email = req.body.email
         const newUser = {
@@ -22,7 +33,7 @@ class Controller {
             .then(user => {
                 res.status(201).json({
                     id: user.id,
-                    name: user.name,
+                    email: user.email,
                     role: user.role
                 })
             })

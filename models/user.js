@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       // User.hasOne(models.Role, { foreignKey: 'role' })
-      User.belongsTo(models.Role, { foreignKey: 'role' })
+      User.belongsTo(models.Role, { foreignKey: 'RoleId' })
       // User.belongsToMany(models.Form, { through: models.Approval })
       User.hasMany(models.Approval )
     }
@@ -43,7 +43,7 @@ module.exports = (sequelize, DataTypes) => {
         }
       }
     },
-    role: {
+    RoleId: {
       type: DataTypes.INTEGER,
       references: {
         model: 'Roles',

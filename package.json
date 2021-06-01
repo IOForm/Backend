@@ -4,7 +4,7 @@
   "description": "IOForm Backend",
   "main": "index.js",
   "scripts": {
-    "test": "jest --forceExit --runInBand",
+    "test": "jest --forceExit --runInBand --collectCoverage",
     "dev": "cross-env NODE_ENV=development nodemon app.js",
     "start": "node app.js"
   },
@@ -28,7 +28,8 @@
     "jsonwebtoken": "^8.5.1",
     "pg": "^8.6.0",
     "sequelize": "^6.6.2",
-    "sequelize-cli": "^6.2.0"
+    "sequelize-cli": "^6.2.0",
+    "socketio": "^1.0.0"
   },
   "devDependencies": {
     "jest": "^27.0.1",

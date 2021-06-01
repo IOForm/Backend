@@ -2,7 +2,13 @@ const { Role } = require('../models');
 
 class Controller {
     static show(req, res) {
-        Role.findAll()
+        Role.findAll({
+            where: {
+                position: {
+                    [Op.gt]: 0
+                }
+            }
+        })
             .then(roles => {
                 res.status(200).json(roles)
             })
@@ -29,8 +35,12 @@ class Controller {
     }
     static findOne(req, res) {
         Role.findByPk(req.params.id)
-            .then(roles => {
-                res.status(200).json(roles)
+            .then(role => {
+                if (role) {
+                    res.status(200).json(role)
+                } else {
+                    res.status(404).json({ message: `Not Found` })
+                }
             })
             .catch(err => {
                 res.status(404).json({ message: `Not Found` })
@@ -42,15 +52,13 @@ class Controller {
             role: role,
             position: position
         }, { where: { id: req.params.id } })
-            .then(role => {
+            .then(result => {
                 res.status(200).json({
-                    id: role.id,
-                    role: role.role,
-                    position: role.position
+                    message: `success edit role`
                 })
             })
             .catch(err => {
-                res.status(400).json({ message: `fail create role` })
+                res.status(400).json({ message: `fail edir role` })
             })
     }
     static delete(req, res) {
