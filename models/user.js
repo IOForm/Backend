@@ -13,14 +13,16 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       User.belongsTo(models.Role)
       User.belongsToMany(models.Form, { through: models.Approval })
-      User.hasMany(models.Approval )
+      User.hasMany(models.Approval)
     }
   };
   User.init({
     email: DataTypes.STRING,
     name: DataTypes.STRING,
     password: DataTypes.STRING,
-    RoleId: DataTypes.INTEGER
+    RoleId: {
+      type: DataTypes.INTEGER, 
+    }
   }, {
     sequelize,
     modelName: 'User',

@@ -27,7 +27,7 @@ class Controller {
                 })
             })
             .catch(err => {
-                res.status(400).json({ message: `fail register` })
+                next(err)
             })
     }
     // LOGIN

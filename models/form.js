@@ -16,10 +16,33 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   Form.init({
-    clientName: DataTypes.STRING,
-    formDetail: DataTypes.TEXT,
-    fileAttachment: DataTypes.TEXT,
-    formComplete: DataTypes.BOOLEAN
+    clientName: {
+      type: DataTypes.STRING,
+      validate: {
+        notEmpty: {
+          msg: `client name cannot be empty`
+        }
+      }
+    },
+    formDetail: {
+      type: DataTypes.TEXT,
+      validate: {
+        notEmpty: {
+          msg: `form detail cannot be empty`
+        }
+      }
+    },
+    fileAttachment: {
+      type: DataTypes.TEXT,
+      validate: {
+        notEmpty: {
+          msg: `file attachment cannot be empty`
+        }
+      }
+    },
+    formComplete: {
+      type: DataTypes.BOOLEAN,
+    }
   }, {
     sequelize,
     modelName: 'Form',
