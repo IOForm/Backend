@@ -26,7 +26,7 @@ class FormController {
         await Promise.all(generateApproval)
         
         if(newForm && generateApproval) {
-            sendMailToApproval('trisnaadetia@gmail.com', fileAttachment)
+            sendMailToApproval('ioformtestreceieve@gmail.com', fileAttachment)
         }
         
         res.status(201).json({ message: 'Form and Approval Created' })
