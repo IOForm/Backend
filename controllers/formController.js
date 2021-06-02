@@ -1,4 +1,5 @@
 const { Form, Approval } = require('../models');
+const sendMailToApproval = require('../helper/nodemailer')
 
 class FormController {
     static getAllForm(req, res) {
@@ -23,6 +24,11 @@ class FormController {
             rejected: false
         })))
         await Promise.all(generateApproval)
+        
+        if(newForm && generateApproval) {
+            sendMailToApproval('ioformtestreceieve@gmail.com', fileAttachment)
+        }
+        
         res.status(201).json({ message: 'Form and Approval Created' })
     }
 }
