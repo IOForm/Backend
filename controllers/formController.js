@@ -9,6 +9,7 @@ class FormController {
     static async addForm(req, res, next) {
         try {
             const { clientName, formDetail, fileAttachment, approvalList } = req.body
+            
             const newForm = await Form.create({
                 clientName,
                 formDetail,

@@ -128,6 +128,9 @@ class Controller {
                         }
                     })
                 }
+                res.status(200).json({
+                    message: "approval has been updated"
+                })
             }
         } catch (error) {
             res.status(404).json({ message: `fail edit approval` })

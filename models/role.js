@@ -15,8 +15,22 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   Role.init({
-    name: DataTypes.STRING,
-    position: DataTypes.INTEGER
+    name: {
+      type: DataTypes.STRING,
+      validate: {
+        notEmpty: {
+          msg: `name cannot be empty`
+        }
+      }
+    },
+    position: {
+      type: DataTypes.INTEGER,
+      validate: {
+        notEmpty: {
+          msg: `position cannot be empty`
+        }
+      }
+    }
   }, {
     sequelize,
     modelName: 'Role',

@@ -2,76 +2,76 @@ const request = require('supertest');
 const app = require("../app.js");
 const { createToken } = require('../helper/jwt');
 const { hashPassword } = require('../helper/bcrypt');
-const {Form, User, sequelize} = require('../models')
-const {queryInterface} = sequelize
+const { Form, User, sequelize } = require('../models')
+const { queryInterface } = sequelize
 
 let access_token_user
 let access_token_fail = '18ey102hdiaslihdao8se8qd'
 
 beforeAll(done => {
   queryInterface.bulkInsert('Roles', [{
-      name: 'Stakeholder',
-      position: 1,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    },{
-      name: 'Finance',
-      position: 2,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    },{
-      name: 'Head of Division',
-      position: 3,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    },{
-      name: 'Admin',
-      position: 0,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    }], {returning: ["id"]}
+    name: 'Stakeholder',
+    position: 1,
+    createdAt: new Date(),
+    updatedAt: new Date()
+  }, {
+    name: 'Finance',
+    position: 2,
+    createdAt: new Date(),
+    updatedAt: new Date()
+  }, {
+    name: 'Head of Division',
+    position: 3,
+    createdAt: new Date(),
+    updatedAt: new Date()
+  }, {
+    name: 'Admin',
+    position: 0,
+    createdAt: new Date(),
+    updatedAt: new Date()
+  }], { returning: ["id"] }
   )
-  .then((data) => {
+    .then((data) => {
       return queryInterface.bulkInsert('Users', [
-          {   
-              email: 'ben@mail.com',
-              name: 'Ben',
-              password: hashPassword('1234'),
-              RoleId: data[0].id,
-              createdAt: new Date(),
-              updatedAt: new Date()
-          }
+        {
+          email: 'ben@mail.com',
+          name: 'Ben',
+          password: hashPassword('1234'),
+          RoleId: data[0].id,
+          createdAt: new Date(),
+          updatedAt: new Date()
+        }
       ])
-      .then(() => {
-        return queryInterface.bulkInsert('Forms', [{
+        .then(() => {
+          return queryInterface.bulkInsert('Forms', [{
             clientName: "name1",
             formDetail: "detail1",
             fileAttachment: "attach1",
             formComplete: false,
             createdAt: new Date(),
             updatedAt: new Date()
-        }], {})
-      })
-      .then(() => {
-        return  User.findOne({
-          where: { email: 'ben@mail.com'}
-        }) 
-        .then(user => {
-          const payload = {id: user.id, email: user.email}
-          access_token_user = createToken(payload)
-          console.log(access_token_user)
-          done()
+          }], {})
         })
-        .catch((err) => {
-          done(err)
+        .then(() => {
+          return User.findOne({
+            where: { email: 'ben@mail.com' }
+          })
+            .then(user => {
+              const payload = { id: user.id, email: user.email }
+              access_token_user = createToken(payload)
+              console.log(access_token_user)
+              done()
+            })
+            .catch((err) => {
+              done(err)
+            })
         })
     })
-  })
 })
 
 describe('/GET forms requirement', () => {
-    it('should have a 200 status code, equal with the body value', function(done) {
-      request(app)
+  it('should have a 200 status code, equal with the body value', function (done) {
+    request(app)
       .get('/forms')
       .set('Accept', 'application/json')
       .set('access_token', access_token_user)
@@ -84,9 +84,9 @@ describe('/GET forms requirement', () => {
         console.log(err);
         done(err)
       })
-    })
+  })
 
-    it('should have a 401 status code, must need authentication', function(done) {
+  it('should have a 401 status code, must need authentication', function (done) {
     request(app)
       .post('/forms')
       .set('access_token', access_token_fail)
@@ -100,19 +100,19 @@ describe('/GET forms requirement', () => {
         console.log(err);
         done(err)
       })
-    })
   })
-  
-  describe('/POST forms requirement', () => {
+})
 
-    let access_token_user
+describe('/POST forms requirement', () => {
 
-    beforeAll(done => {
-      User.findOne({
-        where: { email: 'ben@mail.com'}
-      }) 
+  let access_token_user
+
+  beforeAll(done => {
+    User.findOne({
+      where: { email: 'ben@mail.com' }
+    })
       .then(user => {
-        const payload = {id: user.id, email: user.email}
+        const payload = { id: user.id, email: user.email }
         access_token_user = createToken(payload)
         console.log(access_token_user)
         done()
@@ -120,17 +120,17 @@ describe('/GET forms requirement', () => {
       .catch((err) => {
         done(err)
       })
-    })
+  })
 
-    it('should have a 201 status code, equal with the body value', function(done) {
-      let formData = {
-        clientName: "name1",
-        formDetail: "detail1",
-        fileAttachment: "attach1",
-        approvalList: [],
-        formComplete: false,
-     }
-      request(app)
+  it('should have a 201 status code, equal with the body value', function (done) {
+    let formData = {
+      clientName: "name1",
+      formDetail: "detail1",
+      fileAttachment: "attach1",
+      approvalList: [],
+      formComplete: false,
+    }
+    request(app)
       .post('/forms')
       .set('access_token', access_token_user)
       .send(formData)
@@ -143,16 +143,16 @@ describe('/GET forms requirement', () => {
         console.log(err);
         done(err)
       })
-    })
-  
-    it('should have a 401 status code, must need authentication', function(done) {
-      let formData = {
-        clientName: "name1",
-        formDetail: "detail1",
-        fileAttachment: "attach1",
-        approvalList: [],
-        formComplete: false,
-     }
+  })
+
+  it('should have a 401 status code, must need authentication', function (done) {
+    let formData = {
+      clientName: "name1",
+      formDetail: "detail1",
+      fileAttachment: "attach1",
+      approvalList: [],
+      formComplete: false,
+    }
     request(app)
       .post('/forms')
       .set('access_token', access_token_fail)
@@ -167,16 +167,16 @@ describe('/GET forms requirement', () => {
         console.log(err);
         done(err)
       })
-    })
-  
-    it('should have a 400 status code, client name cannot be empty', function(done) {
-      let formData = {
-        clientName: "",
-        formDetail: "detail1",
-        fileAttachment: "attach1",
-        approvalList: [],
-        formComplete: false,
-     }
+  })
+
+  it('should have a 400 status code, client name cannot be empty', function (done) {
+    let formData = {
+      clientName: "",
+      formDetail: "detail1",
+      fileAttachment: "attach1",
+      approvalList: [],
+      formComplete: false,
+    }
     request(app)
       .post('/forms')
       .set('access_token', access_token_user)
@@ -190,17 +190,17 @@ describe('/GET forms requirement', () => {
         console.log(err);
         done(err)
       })
-    })
-    
-    it('should have a 400 status code, form detail cannot be empty', function(done) {
-      let formData = {
-        clientName: "name1",
-        formDetail: "",
-        fileAttachment: "attach1",
-        approvalList: [
-            1, 2
-        ]
-     }
+  })
+
+  it('should have a 400 status code, form detail cannot be empty', function (done) {
+    let formData = {
+      clientName: "name1",
+      formDetail: "",
+      fileAttachment: "attach1",
+      approvalList: [
+        1, 2
+      ]
+    }
     request(app)
       .post('/forms')
       .set('access_token', access_token_user)
@@ -214,17 +214,17 @@ describe('/GET forms requirement', () => {
         console.log(err);
         done(err)
       })
-    })   
-  
-    it('should have a 400 status code, file attachment cannot be empty', function(done) {
-      let formData = {
-        clientName: "name1",
-        formDetail: "detail1",
-        fileAttachment: "",
-        approvalList: [
-            1, 2
-        ]
-     }
+  })
+
+  it('should have a 400 status code, file attachment cannot be empty', function (done) {
+    let formData = {
+      clientName: "name1",
+      formDetail: "detail1",
+      fileAttachment: "",
+      approvalList: [
+        1, 2
+      ]
+    }
     request(app)
       .post('/forms')
       .set('access_token', access_token_user)
@@ -238,39 +238,39 @@ describe('/GET forms requirement', () => {
         console.log(err);
         done(err)
       })
-    })
+  })
 
-    it('should have a 400 status code, data cannot be empty', function(done) {
-      let formData =  {
-        clientName: "name1",
-        formDetail: "detail1",
-        fileAttachment: "attach1",
-        approvalList: [
-            "satu", "dua"
-        ]
-     }
-      request(app)
-        .post('/forms')
-        .set('access_token', access_token_user)
-        .send(formData)
-        .then(response => {
-          expect(response.status).toBe(400)
-          expect(response.body).toHaveProperty('message')
-          done()
-        })
-        .catch(err => {
-          console.log(err);
-          done(err)
-        })
+  it('should have a 400 status code, data cannot be empty', function (done) {
+    let formData = {
+      clientName: "name1",
+      formDetail: "detail1",
+      fileAttachment: "attach1",
+      approvalList: [
+        "satu", "dua"
+      ]
+    }
+    request(app)
+      .post('/forms')
+      .set('access_token', access_token_user)
+      .send(formData)
+      .then(response => {
+        expect(response.status).toBe(400)
+        expect(response.body).toHaveProperty('message')
+        done()
       })
-       
-    it('should have a 500 status code, approval list must be array', function(done) {
-      let formData = {
-        clientName: "name1",
-        formDetail: "detail1",
-        fileAttachment: "attach1",
-        approvalList: ""
-     }
+      .catch(err => {
+        console.log(err);
+        done(err)
+      })
+  })
+
+  it('should have a 500 status code, approval list must be array', function (done) {
+    let formData = {
+      clientName: "name1",
+      formDetail: "detail1",
+      fileAttachment: "attach1",
+      approvalList: ""
+    }
     request(app)
       .post('/forms')
       .set('access_token', access_token_user)
@@ -284,35 +284,35 @@ describe('/GET forms requirement', () => {
         console.log(err);
         done(err)
       })
-    })
-
-    it('should have a 500 status code, data cannot be empty', function(done) {
-      let formData = {}
-      request(app)
-        .post('/forms')
-        .set('access_token', access_token_user)
-        .send(formData)
-        .then(response => {
-          expect(response.status).toBe(500)
-          expect(response.body).toHaveProperty('message')
-          done()
-        })
-        .catch(err => {
-          console.log(err);
-          done(err)
-        })
-    })
   })
 
-  describe('/GET BY ID forms requirement', () => {
-    let access_token_user
+  it('should have a 500 status code, data cannot be empty', function (done) {
+    let formData = {}
+    request(app)
+      .post('/forms')
+      .set('access_token', access_token_user)
+      .send(formData)
+      .then(response => {
+        expect(response.status).toBe(500)
+        expect(response.body).toHaveProperty('message')
+        done()
+      })
+      .catch(err => {
+        console.log(err);
+        done(err)
+      })
+  })
+})
 
-    beforeAll(done => {
-      User.findOne({
-        where: { email: 'ben@mail.com'}
-      }) 
+describe('/GET BY ID forms requirement', () => {
+  let access_token_user
+
+  beforeAll(done => {
+    User.findOne({
+      where: { email: 'ben@mail.com' }
+    })
       .then(user => {
-        const payload = {id: user.id, email: user.email}
+        const payload = { id: user.id, email: user.email }
         access_token_user = createToken(payload)
         let dataform = {
           clientName: "name1",
@@ -320,8 +320,8 @@ describe('/GET forms requirement', () => {
           fileAttachment: "attach1",
           approvalList: [],
           formComplete: false,
-       }
-       return Form.create(dataform)
+        }
+        return Form.create(dataform)
       })
       .then(response => {
         getId = +response.id
@@ -330,51 +330,51 @@ describe('/GET forms requirement', () => {
       .catch(err => {
         done(err)
       })
-    })
-    
-    afterAll(done => {
-      queryInterface.bulkDelete('Forms')
+  })
+
+  afterAll(done => {
+    queryInterface.bulkDelete('Forms')
       .then(() => {
         done()
       })
       .catch(err => {
         done(err)
       })
-    })
-  
-    it('should have a 200 status code, equal with the body value', function(done) {
-      let data = {
-        clientName: "name1",
-        formDetail: "detail1",
-        fileAttachment: "attach1",
-        approvalList: [],
-        formComplete: false,
-     }
-      request(app)
+  })
+
+  it('should have a 200 status code, equal with the body value', function (done) {
+    let data = {
+      clientName: "name1",
+      formDetail: "detail1",
+      fileAttachment: "attach1",
+      approvalList: [],
+      formComplete: false,
+    }
+    request(app)
       .get(`/forms/${getId}`)
       .set('access_token', access_token_user)
       .send(data)
       .then(response => {
         expect(response.status).toBe(200)
         expect(typeof response.body).toEqual('object')
-        expect(response.body).toHaveProperty('id',expect.any(Number))
+        expect(response.body).toHaveProperty('id', expect.any(Number))
         done()
       })
       .catch(err => {
         console.log(err);
         done(err)
       })
-    })
-  
-    it('should have a 401 status code, must need authentication', function(done) {
-      let data = {
-        clientName: "name1",
-        formDetail: "detail1",
-        fileAttachment: "attach1",
-        approvalList: [],
-        formComplete: false,
-     }
-      request(app)
+  })
+
+  it('should have a 401 status code, must need authentication', function (done) {
+    let data = {
+      clientName: "name1",
+      formDetail: "detail1",
+      fileAttachment: "attach1",
+      approvalList: [],
+      formComplete: false,
+    }
+    request(app)
       .put(`/forms/${getId}`)
       .set('access_token', access_token_fail)
       .send(data)
@@ -388,18 +388,18 @@ describe('/GET forms requirement', () => {
         console.log(err);
         done(err)
       })
-    })
   })
+})
 
-  describe('/PUT forms requirement', () => {
-    let access_token_user
+describe('/PUT forms requirement', () => {
+  let access_token_user
 
-    beforeAll(done => {
-      User.findOne({
-        where: { email: 'ben@mail.com'}
-      }) 
+  beforeAll(done => {
+    User.findOne({
+      where: { email: 'ben@mail.com' }
+    })
       .then(user => {
-        const payload = {id: user.id, email: user.email}
+        const payload = { id: user.id, email: user.email }
         access_token_user = createToken(payload)
         let dataform = {
           clientName: "name1",
@@ -407,8 +407,8 @@ describe('/GET forms requirement', () => {
           fileAttachment: "attach1",
           approvalList: [],
           formComplete: false,
-       }
-       return Form.create(dataform)
+        }
+        return Form.create(dataform)
       })
       .then(response => {
         getId = +response.id
@@ -417,51 +417,51 @@ describe('/GET forms requirement', () => {
       .catch(err => {
         done(err)
       })
-    })
-    
-    afterAll(done => {
-      queryInterface.bulkDelete('Forms')
+  })
+
+  afterAll(done => {
+    queryInterface.bulkDelete('Forms')
       .then(() => {
         done()
       })
       .catch(err => {
         done(err)
       })
-    })
-  
-    it('should have a 200 status code, equal with the body value', function(done) {
-      let data = {
-        clientName: "name1",
-        formDetail: "detail1",
-        fileAttachment: "attach1",
-        approvalList: [],
-        formComplete: false,
-     }
-      request(app)
+  })
+
+  it('should have a 200 status code, equal with the body value', function (done) {
+    let data = {
+      clientName: "name1",
+      formDetail: "detail1",
+      fileAttachment: "attach1",
+      approvalList: [],
+      formComplete: false,
+    }
+    request(app)
       .put(`/forms/${getId}`)
       .set('access_token', access_token_user)
       .send(data)
       .then(response => {
         expect(response.status).toBe(200)
         expect(typeof response.body).toEqual('object')
-        expect(response.body).toHaveProperty('id',expect.any(Number))
+        expect(response.body).toHaveProperty('id', expect.any(Number))
         done()
       })
       .catch(err => {
         console.log(err);
         done(err)
       })
-    })
-  
-    it('should have a 401 status code, must need authentication', function(done) {
-      let data = {
-        clientName: "name1",
-        formDetail: "detail1",
-        fileAttachment: "attach1",
-        approvalList: [],
-        formComplete: false,
-     }
-      request(app)
+  })
+
+  it('should have a 401 status code, must need authentication', function (done) {
+    let data = {
+      clientName: "name1",
+      formDetail: "detail1",
+      fileAttachment: "attach1",
+      approvalList: [],
+      formComplete: false,
+    }
+    request(app)
       .put(`/forms/${getId}`)
       .set('access_token', access_token_fail)
       .send(data)
@@ -475,16 +475,16 @@ describe('/GET forms requirement', () => {
         console.log(err);
         done(err)
       })
-    })
-    
-    it('should have a 400 status code, client name cannot be empty', function(done) {
-      let data = {
-        clientName: "",
-        formDetail: "detail1",
-        fileAttachment: "attach1",
-        approvalList: [],
-        formComplete: false,
-     }
+  })
+
+  it('should have a 400 status code, client name cannot be empty', function (done) {
+    let data = {
+      clientName: "",
+      formDetail: "detail1",
+      fileAttachment: "attach1",
+      approvalList: [],
+      formComplete: false,
+    }
     request(app)
       .put(`/forms/${getId}`)
       .set('access_token', access_token_user)
@@ -498,17 +498,17 @@ describe('/GET forms requirement', () => {
         console.log(err);
         done(err)
       })
-    })
-    
-    it('should have a 400 status code, form detail cannot be empty', function(done) {
-      let data = {
-        clientName: "name1",
-        formDetail: "",
-        fileAttachment: "attach1",
-        approvalList: [
-            1, 2
-        ]
-     }
+  })
+
+  it('should have a 400 status code, form detail cannot be empty', function (done) {
+    let data = {
+      clientName: "name1",
+      formDetail: "",
+      fileAttachment: "attach1",
+      approvalList: [
+        1, 2
+      ]
+    }
     request(app)
       .put(`/forms/${getId}`)
       .set('access_token', access_token_user)
@@ -522,17 +522,17 @@ describe('/GET forms requirement', () => {
         console.log(err);
         done(err)
       })
-    })   
-  
-    it('should have a 400 status code, file attachment cannot be empty', function(done) {
-      let data = {
-        clientName: "name1",
-        formDetail: "detail1",
-        fileAttachment: "",
-        approvalList: [
-            1, 2
-        ]
-     }
+  })
+
+  it('should have a 400 status code, file attachment cannot be empty', function (done) {
+    let data = {
+      clientName: "name1",
+      formDetail: "detail1",
+      fileAttachment: "",
+      approvalList: [
+        1, 2
+      ]
+    }
     request(app)
       .put(`/forms/${getId}`)
       .set('access_token', access_token_user)
@@ -546,39 +546,39 @@ describe('/GET forms requirement', () => {
         console.log(err);
         done(err)
       })
-    })
+  })
 
-    it('should have a 400 status code, data cannot be empty', function(done) {
-      let data =  {
-        clientName: "name1",
-        formDetail: "detail1",
-        fileAttachment: "attach1",
-        approvalList: [
-            "satu", "dua"
-        ]
-     }
-      request(app)
-        .put(`/forms/${getId}`)
-        .set('access_token', access_token_user)
-        .send(data)
-        .then(response => {
-          expect(response.status).toBe(400)
-          expect(response.body).toHaveProperty('message')
-          done()
-        })
-        .catch(err => {
-          console.log(err);
-          done(err)
-        })
+  it('should have a 400 status code, data cannot be empty', function (done) {
+    let data = {
+      clientName: "name1",
+      formDetail: "detail1",
+      fileAttachment: "attach1",
+      approvalList: [
+        "satu", "dua"
+      ]
+    }
+    request(app)
+      .put(`/forms/${getId}`)
+      .set('access_token', access_token_user)
+      .send(data)
+      .then(response => {
+        expect(response.status).toBe(400)
+        expect(response.body).toHaveProperty('message')
+        done()
       })
-       
-    it('should have a 500 status code, approval list must be array', function(done) {
-      let data = {
-        clientName: "name1",
-        formDetail: "detail1",
-        fileAttachment: "attach1",
-        approvalList: ""
-     }
+      .catch(err => {
+        console.log(err);
+        done(err)
+      })
+  })
+
+  it('should have a 500 status code, approval list must be array', function (done) {
+    let data = {
+      clientName: "name1",
+      formDetail: "detail1",
+      fileAttachment: "attach1",
+      approvalList: ""
+    }
     request(app)
       .put(`/forms/${getId}`)
       .set('access_token', access_token_user)
@@ -592,35 +592,35 @@ describe('/GET forms requirement', () => {
         console.log(err);
         done(err)
       })
-    })
-
-    it('should have a 500 status code, data cannot be empty', function(done) {
-      let data = {}
-      request(app)
-        .put(`/forms/${getId}`)
-        .set('access_token', access_token_user)
-        .send(data)
-        .then(response => {
-          expect(response.status).toBe(500)
-          expect(response.body).toHaveProperty('message')
-          done()
-        })
-        .catch(err => {
-          console.log(err);
-          done(err)
-        })
-    })
   })
 
-  describe('/DELETE forms requirement', () => {
-    let access_token_user
+  it('should have a 500 status code, data cannot be empty', function (done) {
+    let data = {}
+    request(app)
+      .put(`/forms/${getId}`)
+      .set('access_token', access_token_user)
+      .send(data)
+      .then(response => {
+        expect(response.status).toBe(500)
+        expect(response.body).toHaveProperty('message')
+        done()
+      })
+      .catch(err => {
+        console.log(err);
+        done(err)
+      })
+  })
+})
 
-    beforeAll(done => {
-      User.findOne({
-        where: { email: 'ben@mail.com'}
-      }) 
+describe('/DELETE forms requirement', () => {
+  let access_token_user
+
+  beforeAll(done => {
+    User.findOne({
+      where: { email: 'ben@mail.com' }
+    })
       .then(user => {
-        const payload = {id: user.id, email: user.email}
+        const payload = { id: user.id, email: user.email }
         access_token_user = createToken(payload)
         let dataform = {
           clientName: "name1",
@@ -628,8 +628,8 @@ describe('/GET forms requirement', () => {
           fileAttachment: "attach1",
           approvalList: [],
           formComplete: false,
-       }
-       return Form.create(dataform)
+        }
+        return Form.create(dataform)
       })
       .then(response => {
         getId = +response.id
@@ -638,20 +638,20 @@ describe('/GET forms requirement', () => {
       .catch(err => {
         done(err)
       })
-    })
-    
-    afterAll(done => {
-      queryInterface.bulkDelete('Forms')
+  })
+
+  afterAll(done => {
+    queryInterface.bulkDelete('Forms')
       .then(() => {
         done()
       })
       .catch(err => {
         done(err)
       })
-    })
-  
-    it('should have a 200 status code, equal with the body value', function(done) {
-      request(app)
+  })
+
+  it('should have a 200 status code, equal with the body value', function (done) {
+    request(app)
       .delete(`/forms/${getId}`)
       .set('access_token', access_token_user)
       .then(response => {
@@ -664,10 +664,10 @@ describe('/GET forms requirement', () => {
         console.log(err);
         done(err)
       })
-    })
-  
-    it('should have a 401 status code, must need authentication', function(done) {
-      request(app)
+  })
+
+  it('should have a 401 status code, must need authentication', function (done) {
+    request(app)
       .delete(`/forms/${getId}`)
       .set('access_token', access_token_fail)
       .then(response => {
@@ -680,10 +680,10 @@ describe('/GET forms requirement', () => {
         console.log(err);
         done(err)
       })
-    })
-  
-    it('should have a 404 status code, user not found', function(done) {
-      request(app)
+  })
+
+  it('should have a 404 status code, user not found', function (done) {
+    request(app)
       .delete(`/forms/${1234}`)
       .set('access_token', access_token_user)
       .then(response => {
@@ -696,22 +696,22 @@ describe('/GET forms requirement', () => {
         console.log(err);
         done(err)
       })
-    })
   })
+})
 
 
-  afterAll((done) => {
-    queryInterface.bulkDelete('Roles',null, {})
+afterAll((done) => {
+  queryInterface.bulkDelete('Roles', null, {})
     .then(() => {
-        return queryInterface.bulkDelete('Users',null, {})
-            .then(() => {
-              return queryInterface.bulkDelete('Forms',null, {})
-            })
-            .then(() => {
-              done()
-            })
-            .catch(err => {
-                done(err)
+      return queryInterface.bulkDelete('Users', null, {})
+        .then(() => {
+          return queryInterface.bulkDelete('Forms', null, {})
+        })
+        .then(() => {
+          done()
+        })
+        .catch(err => {
+          done(err)
         })
     })
 })

@@ -3,8 +3,11 @@
   "version": "1.0.0",
   "description": "IOForm Backend",
   "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
   "scripts": {
-    "test": "set NODE_ENV=test&&jest --forceExit --runInBand --collectCoverage",
+    "test": "set NODE_ENV=test&&jest --detectOpenHandles --forceExit --runInBand --verbose --collectCoverage",
     "dev": "set NODE_ENV=development nodemon app.js",
     "start": "node bin/http.js"
   },

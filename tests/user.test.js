@@ -154,7 +154,7 @@ describe('Register User POST /register', () => {
         name: 'Dimas',
         email: 'dimas@mail.com',
         password: hashPassword('asd'),
-        RoleId: 1,
+        RoleId: 4,
     }
 
     it('response with status 201 and property name, email, RoleId', function (done) {
@@ -167,7 +167,7 @@ describe('Register User POST /register', () => {
                 let { body, status } = response
                 expect(status).toBe(201)
                 expect(body).toHaveProperty('id', newUser.name)
-                expect(body).toHaveProperty('name', newUser.email)
+                expect(body).toHaveProperty('email', newUser.email)
                 expect(body).toHaveProperty('RoleId', newUser.RoleId)
                 done()
             })
@@ -200,6 +200,7 @@ describe('Register User POST /register', () => {
             })
     })
 })
+
 
 // AFTER TEST CASE ======
 afterAll((done) => {

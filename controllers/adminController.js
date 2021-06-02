@@ -5,6 +5,7 @@ class AdminController {
         const formData = await Form.findAll()
         const staffData = await User.findAll()
         const roleData = await Role.findAll()
+        console.log(formData, staffData, roleData, 'ini data controller');
         res.status(200).json({ formData, staffData, roleData })
     }
 
@@ -13,7 +14,7 @@ class AdminController {
             include: Role
         })
             .then(data => res.status(200).json(data))
-            .catch(err => res.status(500).json(err))
+            // .catch(err => res.status(500).json(err))
     }
 }
 

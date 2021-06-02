@@ -3,7 +3,6 @@ const { User } = require('../models');
 
 function authentication(req, res, next) {
     const access_token = req.headers.access_token
-
     if (access_token) {
         let loginUser = verifyUser(access_token)
         User.findOne({
