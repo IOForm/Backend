@@ -27,7 +27,7 @@ class FormController {
             await Promise.all(generateApproval)
             res.status(201).json({ message: 'Form and Approval Created' })
         } catch (err) {
-            console.log(err);
+            // console.log(err);
             next(err)
         }
     }
@@ -69,7 +69,7 @@ class FormController {
                     formComplete: update[1][0].formComplete,
                 })       
         } catch (err) {
-            console.log(err);
+            // console.log(err);
            next(err)
         }
     }

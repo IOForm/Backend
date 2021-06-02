@@ -33,7 +33,7 @@ class Controller {
     // LOGIN
     static login(req, res, next) {
         const { email, password } = req.body
-        console.log(email, password, '<<<')
+        // console.log(email, password, '<<<')
         let foundUser
         User.findOne({
             where: { email: email }

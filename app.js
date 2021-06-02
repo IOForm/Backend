@@ -7,7 +7,6 @@ const app = express();
 const cors = require('cors');
 const router = require('./routes/router');
 const { errorHandler } = require("./middleware/errorHandler");
-const port = process.env.PORT || 4000;
 
 app.use(cors());
 app.use(express.json({limit: '5mb'}))
@@ -15,6 +14,5 @@ app.use(express.urlencoded({ extended: false, limit: '5mb' }))
 
 app.use(router)
 app.use(errorHandler)
-app.listen(port, () => console.log(`server is running in port ${port}...`))
 
 module.exports = app

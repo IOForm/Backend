@@ -5,7 +5,7 @@ class AdminController {
         const formData = await Form.findAll()
         const staffData = await User.findAll()
         const roleData = await Role.findAll()
-        console.log(formData, staffData, roleData, 'ini data controller');
+        // console.log(formData, staffData, roleData, 'ini data controller');
         res.status(200).json({ formData, staffData, roleData })
     }
 

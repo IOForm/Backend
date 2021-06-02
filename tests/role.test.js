@@ -50,7 +50,6 @@ beforeAll(done => {
               .then(user => {
                 const payload = { id: user.id, email: user.email }
                 access_token_user = createToken(payload)
-                console.log(access_token_user)
                 done()
               })
               .catch((err) => {
@@ -166,8 +165,6 @@ describe('ROLE ENDPOINT /role', () => {
             .expect(200)
             .then(response => {
                 let { status, body } = response;
-                console.log(body, 'ini body');
-                console.log(status, 'ini status');
                 expect(status).toBe(200);
                 done()
 

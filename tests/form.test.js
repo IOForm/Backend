@@ -59,7 +59,7 @@ beforeAll(done => {
             .then(user => {
               const payload = { id: user.id, email: user.email }
               access_token_user = createToken(payload)
-              console.log(access_token_user)
+              // console.log(access_token_user)
               done()
             })
             .catch((err) => {
@@ -114,7 +114,7 @@ describe('/POST forms requirement', () => {
       .then(user => {
         const payload = { id: user.id, email: user.email }
         access_token_user = createToken(payload)
-        console.log(access_token_user)
+        // console.log(access_token_user)
         done()
       })
       .catch((err) => {

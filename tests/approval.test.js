@@ -62,7 +62,7 @@ beforeAll(done => {
         .then((data) => {
 
           approvalFormId = data[0].id
-            console.log(approvalFormId, approvalUserId, 'ini data insert');
+            // console.log(approvalFormId, approvalUserId, 'ini data insert');
             return queryInterface.bulkInsert('Approvals', [{
               UserId: approvalUserId,
               FormId: approvalFormId,
@@ -79,7 +79,7 @@ beforeAll(done => {
             .then(user => {
               const payload = { id: user.id, email: user.email }
               access_token_user = createToken(payload)
-              console.log(access_token_user)
+              // console.log(access_token_user)
               done()
             })
             .catch((err) => {
@@ -98,7 +98,7 @@ describe('/GET Dashboard Data requirement', () => {
       .set('access_token', access_token_user)
       .then(response => {
         const {body, status} = response
-        console.log(body,status, 'ini data test');
+        // console.log(body,status, 'ini data test');
         expect(response.status).toBe(200)
         expect(typeof response.body).toEqual('object')
         done()
@@ -116,7 +116,7 @@ describe('/GET Dashboard Data requirement', () => {
       .set('access_token', access_token_user)
       .then(response => {
         const {body, status} = response
-        console.log(body,status, 'ini data test');
+        // console.log(body,status, 'ini data test');
         expect(response.status).toBe(200)
         expect(typeof response.body).toEqual('object')
         done()
@@ -134,7 +134,7 @@ describe('/GET Dashboard Data requirement', () => {
       .set('access_token', access_token_user)
       .then(response => {
         const {body, status} = response
-        console.log(body,status, 'ini data test');
+        // console.log(body,status, 'ini data test');
         expect(response.status).toBe(200)
         expect(typeof response.body).toEqual('object')
         done()
@@ -154,7 +154,7 @@ describe('/GET Dashboard Data requirement', () => {
       .send(dataStatus)
       .then(response => {
         const {body, status} = response
-        console.log(body,status, 'ini data test');
+        // console.log(body,status, 'ini data test');
         expect(response.status).toBe(200)
         expect(typeof response.body).toEqual('object')
         done()
@@ -172,7 +172,7 @@ describe('/GET Dashboard Data requirement', () => {
       .set('access_token', access_token_user)
       .then(response => {
         const {body, status} = response
-        console.log(body,status, 'ini data test');
+        // console.log(body,status, 'ini data test');
         expect(response.status).toBe(200)
         expect(typeof response.body).toEqual('object')
         done()
